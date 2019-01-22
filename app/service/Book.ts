@@ -62,6 +62,10 @@ export default class Book extends Service {
         dataRes = this._categoryHandle(res.data)
       }else if(url.includes("/store/v0/ad/ranks")){
         dataRes = this._rankHandle(res.data)
+      }else if(url.includes("/store/v0/ad/persistent")){
+        dataRes = this._recomendHandle(res.data)
+      }else if(url.includes("/store/v0/fiction/category/")){
+        dataRes = this._vodData(res.data.items)
       }
       return dataRes;
     } catch (error) {
@@ -197,6 +201,19 @@ export default class Book extends Service {
         cover,
         name,
         description:description.split('\n')
+      }
+    })
+  }
+  /** 专题 请求 */
+  private _recomendHandle(data){
+    const {items} = data
+    return items.map(o => {
+      const {ad_copy,ad_name,ad_pic_url,reference_id} = o
+      return {
+        id:reference_id,
+        name:ad_name,
+        cover:ad_pic_url,
+        description:ad_copy
       }
     })
   }
