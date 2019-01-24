@@ -64,7 +64,7 @@ export default class Book extends Service {
         dataRes = this._rankHandle(res.data)
       }else if(url.includes("/store/v0/ad/persistent")){
         dataRes = this._recomendHandle(res.data)
-      }else if(url.includes("/store/v0/fiction/category/")){
+      }else if(url.includes("/store/v0/fiction/category/") || url.includes("/store/v0/fiction/rank")){
         dataRes = this._vodData(res.data.items)
       }
       return dataRes;
@@ -197,7 +197,7 @@ export default class Book extends Service {
     return group.map(o => {
       const {cover,description,name,ranks} = o
       return {
-        id:ranks.split(',')[1],
+        id:ranks,
         cover,
         name,
         description:description.split('\n')
