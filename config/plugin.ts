@@ -1,19 +1,19 @@
-import { EggPlugin } from "egg";
+import { EggPlugin } from 'egg';
 
 const plugin: EggPlugin = {
   static: true,
   nunjucks: {
     enable: true,
-    package: "egg-view-nunjucks"
+    package: 'egg-view-nunjucks',
   },
   mongoose: {
     enable: true,
-    package: "egg-mongoose"
+    package: 'egg-mongoose',
   },
   redis: {
     enable: true,
-    package: "egg-redis"
-  }
+    package: 'egg-redis',
+  },
 };
 
 export default plugin;

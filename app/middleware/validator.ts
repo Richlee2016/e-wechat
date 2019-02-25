@@ -1,7 +1,7 @@
-import { Context } from "egg";
-import * as Joi from "joi";
+import { Context } from 'egg';
+import * as Joi from 'joi';
 interface arg {
-  type?: "query" | "body";
+  type?: 'query' | 'body';
   valid: Joi.ObjectSchema;
   handle?(arg, ctx, next): any;
 }
@@ -9,15 +9,15 @@ interface arg {
 export default function validatorMiddleware(arg: arg): any {
   return async (ctx: Context, next: () => Promise<any>) => {
     let validData = {};
-    let ty = arg.type || "body";
+    const ty = arg.type || 'body';
 
-    if (ty === "body") {
+    if (ty === 'body') {
       validData = ctx.request.body;
     }
     if (ty === 'query') {
-      validData = ctx.query
+      validData = ctx.query;
     }
-    return Joi.validate(validData, arg.valid, err => {
+    return Joi.validate(validData, arg.valid, (err) => {
       if (err !== null) {
         if (arg.handle) {
           arg.handle(err, ctx, next);

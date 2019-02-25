@@ -54,7 +54,7 @@ export default class Book extends Service {
   ) {
     const { ctx, app } = this;
     const { xmBook } = app.config;
-    let opt: any = {
+    const opt: any = {
       method,
       headers: { Cookie: xmBook.cookie },
       dataType: "json"
@@ -63,6 +63,7 @@ export default class Book extends Service {
       opt.data = data;
     }
     try {
+      console.log(`${xmBook.prefix}${url}`, opt);
       const res = await ctx.curl(`${xmBook.prefix}${url}`, opt);
       let dataRes: any = null;
       // home page
@@ -95,6 +96,11 @@ export default class Book extends Service {
         url.includes("/store/v0/fiction/rank")
       ) {
         dataRes = this._vodData(res.data.items);
+      } else if (url.includes("/hs/v0/android/fiction/book/")) {
+        dataRes = {
+          detail: this._vodData([res.data.item]),
+          authorBook: this._vodData(res.data.author_books)
+        };
       }
       return dataRes;
     } catch (error) {
@@ -102,6 +108,50 @@ export default class Book extends Service {
     }
   }
 
+  public async freeBook(type: number, chapter: number, id?: number) {
+    const { ctx } = this;
+    console.log(type,chapter,id);
+    // let res: any = {};
+    try {
+      // const _theBook = new ctx.model.Book({
+      //       _id: chapter
+      // });
+      // await _theBook.save()
+
+      const theBook = await ctx.model.Book.findOne({ _id: chapter }).exec();
+      if (theBook) {
+        // 章节缓存一天
+        if (Date.now() - new Date(theBook.meta.updateAt).getTime() >1000 * 60 * 60 * 24) {
+          const fetchChpater = await ctx.helper.Crawler().bookChapter(type,chapter);
+          const _theBook = {
+            ...theBook,
+            ...fetchChpater
+          };
+          const a = await _theBook.save();
+          console.log(a);
+          return fetchChpater.chapters;
+        }
+        return theBook.chapters;
+      } else {
+        const fetchChpater = await ctx.helper.Crawler().bookChapter(type,chapter);
+        const _theBook = new ctx.model.Book({
+          _id: chapter,
+          chapters:fetchChpater.chapters
+        });
+        await _theBook.save();
+        return fetchChpater.chapters;
+      }
+    } catch (error) {}
+    // if (id) {
+    //   res = await ctx.helper
+    //     .Crawler()
+    //     .bookContext([type, chapter].join("/"), id);
+    // } else {
+    //   res = await ctx.helper.Crawler().bookChapter([type, chapter].join("/"));
+    // }
+    // return res;
+  }
+  /** */
   /** 主页处理函数 */
   private _vodData(data) {
     return data.map((o: any) => {
