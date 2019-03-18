@@ -8,7 +8,7 @@ module.exports = app => {
     author: String,
     newChapter: String,
     newChapterHref: String,
-    status: Number,
+    status: String,
     update: String,
     context: String,
     chapters: [],

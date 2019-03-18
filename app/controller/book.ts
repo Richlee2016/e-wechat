@@ -20,7 +20,7 @@ export default class BookController extends Controller {
     const { url, data, method } = ctx.request.body;
     ctx.body = await ctx.service.book.bookProxy(method, url, data);
   }
-  @Get("/search",[["@cache", { time: 60 * 20 }]])
+  @Get("/search", [["@cache", { time: 60 * 60 * 2 }]])
   public async search() {
     const { ctx } = this;
     const { q } = ctx.query;
@@ -29,13 +29,13 @@ export default class BookController extends Controller {
   @Get("/chapter")
   public async chapter() {
     const { ctx } = this;
-    const { type,chapter } = ctx.query;
-    ctx.body = await ctx.service.book.freeBook(type,chapter)
+    const { type, chapter } = ctx.query;
+    ctx.body = await ctx.service.book.freeBookChapter(type, chapter);
   }
   @Get("/context")
   public async context() {
     const { ctx } = this;
-    const { type,chapter,id } = ctx.query;
-    ctx.body = await ctx.helper.Crawler().bookContext([type,chapter].join('/'), id);
+    const { type, chapter, id } = ctx.query;
+    ctx.body = await ctx.service.book.freeBookContext(type, chapter, id);
   }
 }

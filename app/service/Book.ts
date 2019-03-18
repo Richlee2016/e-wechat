@@ -107,49 +107,59 @@ export default class Book extends Service {
       console.log(error);
     }
   }
-
-  public async freeBook(type: number, chapter: number, id?: number) {
+  /** 免费章节 获取 储存 更新 */
+  public async freeBookChapter(type: number, chapter: number) {
     const { ctx } = this;
-    console.log(type,chapter,id);
-    // let res: any = {};
     try {
-      // const _theBook = new ctx.model.Book({
-      //       _id: chapter
-      // });
-      // await _theBook.save()
-
       const theBook = await ctx.model.Book.findOne({ _id: chapter }).exec();
       if (theBook) {
         // 章节缓存一天
-        if (Date.now() - new Date(theBook.meta.updateAt).getTime() >1000 * 60 * 60 * 24) {
-          const fetchChpater = await ctx.helper.Crawler().bookChapter(type,chapter);
-          const _theBook = {
-            ...theBook,
-            ...fetchChpater
-          };
-          const a = await _theBook.save();
-          console.log(a);
+        if (
+          (Date.now() - new Date(theBook.meta.updateAt).getTime() > 1000 * 60 * 60 * 24)&& theBook.status === '连载'
+        ) {
+          const fetchChpater = await ctx.helper
+            .Crawler()
+            .bookChapter(type, chapter);
+          const _theBook =Object.assign(theBook,fetchChpater);
+          console.log(_theBook);
+          await _theBook.save();
           return fetchChpater.chapters;
         }
         return theBook.chapters;
       } else {
-        const fetchChpater = await ctx.helper.Crawler().bookChapter(type,chapter);
-        const _theBook = new ctx.model.Book({
-          _id: chapter,
-          chapters:fetchChpater.chapters
-        });
+        const fetchChpater = await ctx.helper
+          .Crawler()
+          .bookChapter(type, chapter);
+        const _theBook = new ctx.model.Book(
+          Object.assign(fetchChpater, {
+            _id: chapter
+          })
+        );
         await _theBook.save();
         return fetchChpater.chapters;
       }
     } catch (error) {}
-    // if (id) {
-    //   res = await ctx.helper
-    //     .Crawler()
-    //     .bookContext([type, chapter].join("/"), id);
-    // } else {
-    //   res = await ctx.helper.Crawler().bookChapter([type, chapter].join("/"));
-    // }
-    // return res;
+  }
+  /** 免费阅读 储存 */
+  public async freeBookContext(type: number, chapter: number, id: number) {
+    const { ctx } = this;
+    try {
+      const theChapter = await ctx.model.Chapter.findOne({id:`${chapter}&${id}`}).exec()
+      if(!theChapter){
+        console.log('find new chapter');
+        const res = await ctx.helper.Crawler().bookContext(type,chapter,id)
+        const _chapter = new ctx.model.Chapter({
+          id:`${chapter}&${id}`,
+          title:res.title,
+          context:res.context
+        });
+        await _chapter.save()
+        return res
+      }
+      return theChapter
+    } catch (error) {
+      
+    }
   }
   /** */
   /** 主页处理函数 */
@@ -223,8 +233,9 @@ export default class Book extends Service {
   }
   /** banner 处理 */
   private _bannerHandle(data) {
-    const { banner, description, items } = data;
+    const { label,banner, description, items } = data;
     return {
+      label,
       banner,
       description,
       list: this._vodData(items)

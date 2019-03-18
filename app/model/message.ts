@@ -27,5 +27,8 @@ module.exports = app => {
     next();
   });
 
+
+
+
   return mongoose.model("t_reply_table", MessageSchema);
 };

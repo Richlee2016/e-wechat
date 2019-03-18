@@ -13,11 +13,11 @@ export function bookSearch(
 
 export function bookChapter(
   type: number,
-  chapter:number
+  chapter: number
 ): Promise<{
-  id:number,
+  id: number;
   name: string;
-  preid:number,
+  preid: number;
   author: string;
   newChapter: string;
   newChapterHref: string;
@@ -32,9 +32,11 @@ export function bookChapter(
 }>;
 
 export function bookContext(
-  pre: string,
+  type: number,
+  chapter: number,
   id: number
 ): Promise<{
+  id: string;
   title: string;
   context: string;
 }>;
