@@ -10,7 +10,7 @@
     ]
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=e-wechat",
+    "start": "egg-scripts start --port=3000 --daemon --title=e-wechat",
     "stop": "egg-scripts stop --title=e-wechat",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
