@@ -9,7 +9,7 @@ export default (appInfo: EggAppInfo) => {
   config.keys = appInfo.name + "_1547024757636_1700";
 
   // add your egg config in here
-  config.middleware = [];
+  config.middleware = ['errorHandler'];
 
   //csrf
   config.security = {

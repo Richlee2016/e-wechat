@@ -1,7 +1,7 @@
 import { Context } from 'egg';
 import * as Joi from 'joi';
 interface arg {
-  type?: 'query' | 'body';
+  type: 'query' | 'body';
   valid: Joi.ObjectSchema;
   handle?(arg, ctx, next): any;
 }
@@ -10,7 +10,6 @@ export default function validatorMiddleware(arg: arg): any {
   return async (ctx: Context, next: () => Promise<any>) => {
     let validData = {};
     const ty = arg.type || 'body';
-
     if (ty === 'body') {
       validData = ctx.request.body;
     }

@@ -25,7 +25,7 @@ export default class Book extends Service {
         topic: this._homeTopic(topic)
       };
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /** 瀑布流 */
@@ -42,7 +42,7 @@ export default class Book extends Service {
       );
       return this._vodData(res.data.items);
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
 
@@ -63,7 +63,6 @@ export default class Book extends Service {
       opt.data = data;
     }
     try {
-      console.log(`${xmBook.prefix}${url}`, opt);
       const res = await ctx.curl(`${xmBook.prefix}${url}`, opt);
       let dataRes: any = null;
       // home page
@@ -104,7 +103,7 @@ export default class Book extends Service {
       }
       return dataRes;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /** 免费章节 获取 储存 更新 */
@@ -115,12 +114,14 @@ export default class Book extends Service {
       if (theBook) {
         // 章节缓存一天
         if (
-          (Date.now() - new Date(theBook.meta.updateAt).getTime() > 1000 * 60 * 60 * 24)&& theBook.status === '连载'
+          Date.now() - new Date(theBook.meta.updateAt).getTime() >
+            1000 * 60 * 60 * 24 &&
+          theBook.status === "连载"
         ) {
           const fetchChpater = await ctx.helper
             .Crawler()
             .bookChapter(type, chapter);
-          const _theBook =Object.assign(theBook,fetchChpater);
+          const _theBook = Object.assign(theBook, fetchChpater);
           console.log(_theBook);
           await _theBook.save();
           return fetchChpater.chapters;
@@ -144,22 +145,22 @@ export default class Book extends Service {
   public async freeBookContext(type: number, chapter: number, id: number) {
     const { ctx } = this;
     try {
-      const theChapter = await ctx.model.Chapter.findOne({id:`${chapter}&${id}`}).exec()
-      if(!theChapter){
-        console.log('find new chapter');
-        const res = await ctx.helper.Crawler().bookContext(type,chapter,id)
+      const theChapter = await ctx.model.Chapter.findOne({
+        id: `${chapter}&${id}`
+      }).exec();
+      if (!theChapter) {
+        console.log("find new chapter");
+        const res = await ctx.helper.Crawler().bookContext(type, chapter, id);
         const _chapter = new ctx.model.Chapter({
-          id:`${chapter}&${id}`,
-          title:res.title,
-          context:res.context
+          id: `${chapter}&${id}`,
+          title: res.title,
+          context: res.context
         });
-        await _chapter.save()
-        return res
+        await _chapter.save();
+        return res;
       }
-      return theChapter
-    } catch (error) {
-      
-    }
+      return theChapter;
+    } catch (error) {}
   }
   /** */
   /** 主页处理函数 */
@@ -233,7 +234,7 @@ export default class Book extends Service {
   }
   /** banner 处理 */
   private _bannerHandle(data) {
-    const { label,banner, description, items } = data;
+    const { label, banner, description, items } = data;
     return {
       label,
       banner,

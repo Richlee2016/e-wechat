@@ -1,6 +1,6 @@
 import { Controller } from "egg";
 import { Contro, Get,Post, Prefix } from "../router";
-
+import {MovieVodsDto,MovieSearchDto} from '../dto/movie'
 @Prefix(["movie"])
 @Contro("/movie")
 export default class MovieController extends Controller {
@@ -15,7 +15,7 @@ export default class MovieController extends Controller {
       console.log(error);
     }
   }
-  @Get("/getvods")
+  @Get("/getvods",[MovieVodsDto])
   public async getTypeVod(){
     const {ctx} = this;
     const q = ctx.query;
@@ -26,7 +26,7 @@ export default class MovieController extends Controller {
         console.log(error);
     }
   }
-  @Post('/search')
+  @Post('/search',[MovieSearchDto])
   public async searchMove(){
       const {ctx} = this;
       const q = ctx.request.body
