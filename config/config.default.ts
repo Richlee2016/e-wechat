@@ -24,7 +24,7 @@ export default (appInfo: EggAppInfo) => {
   // };
   //mongodb
   config.mongoose = {
-    url: "mongodb://localhost:27017/wechat",
+    url: "mongodb://127.0.0.1:27017/wechat",
     options: {}
   };
   //redis
