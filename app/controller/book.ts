@@ -6,6 +6,9 @@ export default class BookController extends Controller {
   @Get("/home", ["@cache"])
   public async home() {
     const { ctx } = this;
+    ctx.set('Access-Control-Allow-Origin','*')
+    ctx.set('Access-Control-Allow-Methods','POST,GET,OPTIONS,DELETE')
+    ctx.set('Access-Control-Allow-Headers','x-requested-with,content-type')
     ctx.body = await ctx.service.book.fetchHome();
   }
   @Get("/falls", ["@cache"])
