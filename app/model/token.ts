@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app) => {
   const mongoose = app.mongoose;
   const TokenSchema = new mongoose.Schema({
     name: String,
@@ -19,7 +19,7 @@ module.exports = app => {
     }
   });
 
-  TokenSchema.pre("save", function(next) {
+  TokenSchema.pre('save', function(next) {
     if (TokenSchema.isNew) {
       TokenSchema.meta.createAt = TokenSchema.meta.updateAt = Date.now();
     } else {
@@ -28,5 +28,5 @@ module.exports = app => {
     next();
   });
 
-  return mongoose.model("t_token_table", TokenSchema);
+  return mongoose.model('t_token_table', TokenSchema);
 };

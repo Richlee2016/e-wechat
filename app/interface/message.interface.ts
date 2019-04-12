@@ -1,5 +1,5 @@
 /** 消息  */
-import { Document } from "mongoose";
+import { Document } from 'mongoose';
 // 微信回调 参数
 export interface MessagePost {
   readonly signature: string;
@@ -12,7 +12,7 @@ export interface MessagePost {
 export interface MessageXml {
   MsgType: string;
   CreateTime?: string;
-  Content?: string | Array<any>;
+  Content?: string | any[];
   ToUserName?: string;
   FromUserName?: string;
   MediaId?: string;

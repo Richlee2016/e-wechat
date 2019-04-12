@@ -1,19 +1,16 @@
-import { Service } from "egg";
-import * as _ from "lodash";
+import { Service } from 'egg';
+import * as _ from 'lodash';
 /**
  * 书籍
  */
 export default class Book extends Service {
-  public commonOpt: any = { method: "GET", dataType: "json" };
+  public commonOpt: any = { method: 'GET', dataType: 'json' };
   /** 请求书城主页 */
   public async fetchHome() {
     const { ctx, app } = this;
     const { xmBook } = app.config;
     try {
-      const res = await ctx.curl(
-        `${xmBook.prefix}/hs/v3/channel/418`,
-        this.commonOpt
-      );
+      const res = await ctx.curl(`${xmBook.prefix}/hs/v3/channel/418`, this.commonOpt);
       const [banner, hot, recommend, boy, girl, free, topic] = res.data.items;
       return {
         banner: this._homeBanner(banner),
@@ -22,7 +19,7 @@ export default class Book extends Service {
         boy: this._homeListVod(boy),
         girl: this._homeListVod(girl),
         free: this._homeFree(free),
-        topic: this._homeTopic(topic)
+        topic: this._homeTopic(topic),
       };
     } catch (error) {
       throw new Error(error);
@@ -33,12 +30,12 @@ export default class Book extends Service {
     const { ctx, app } = this;
     const { xmBook } = app.config;
     const opt = Object.assign(this.commonOpt, {
-      headers: { Cookie: xmBook.cookie }
+      headers: { Cookie: xmBook.cookie },
     });
     try {
       const res = await ctx.curl(
         `${xmBook.prefix}/rock/book/recommend?start=${start}&count=${count}`,
-        opt
+        opt,
       );
       return this._vodData(res.data.items);
     } catch (error) {
@@ -48,25 +45,25 @@ export default class Book extends Service {
 
   /** 代理 */
   public async bookProxy(
-    method: "GET" | "POST" = "GET",
+    method: 'GET' | 'POST' = 'GET',
     url: string,
-    data?: any
+    data?: any,
   ) {
     const { ctx, app } = this;
     const { xmBook } = app.config;
     const opt: any = {
       method,
       headers: { Cookie: xmBook.cookie },
-      dataType: "json"
+      dataType: 'json',
     };
-    if (method === "POST" && data) {
+    if (method === 'POST' && data) {
       opt.data = data;
     }
     try {
       const res = await ctx.curl(`${xmBook.prefix}${url}`, opt);
       let dataRes: any = null;
       // home page
-      if (url === "/hs/v3/channel/418") {
+      if (url === '/hs/v3/channel/418') {
         const [banner, hot, recommend, girl, boy, free, topic] = res.data.items;
         dataRes = {
           banner: this._homeBanner(banner),
@@ -75,30 +72,30 @@ export default class Book extends Service {
           boy: this._homeListVod(boy),
           girl: this._homeListVod(girl),
           free: this._homeFree(free),
-          topic: this._homeTopic(topic)
+          topic: this._homeTopic(topic),
         };
         return dataRes;
       }
       // base page
-      if (url.includes("/store/v0/fiction/list/")) {
+      if (url.includes('/store/v0/fiction/list/')) {
         dataRes = this._bannerHandle(res.data);
-      } else if (url.includes("/hs/v3/channel/")) {
+      } else if (url.includes('/hs/v3/channel/')) {
         dataRes = this._channelHandle(res.data);
-      } else if (url.includes("/hs/v0/android/store/category")) {
+      } else if (url.includes('/hs/v0/android/store/category')) {
         dataRes = this._categoryHandle(res.data);
-      } else if (url.includes("/store/v0/ad/ranks")) {
+      } else if (url.includes('/store/v0/ad/ranks')) {
         dataRes = this._rankHandle(res.data);
-      } else if (url.includes("/store/v0/ad/persistent")) {
+      } else if (url.includes('/store/v0/ad/persistent')) {
         dataRes = this._recomendHandle(res.data);
       } else if (
-        url.includes("/store/v0/fiction/category/") ||
-        url.includes("/store/v0/fiction/rank")
+        url.includes('/store/v0/fiction/category/') ||
+        url.includes('/store/v0/fiction/rank')
       ) {
         dataRes = this._vodData(res.data.items);
-      } else if (url.includes("/hs/v0/android/fiction/book/")) {
+      } else if (url.includes('/hs/v0/android/fiction/book/')) {
         dataRes = {
           detail: this._vodData([res.data.item]),
-          authorBook: this._vodData(res.data.author_books)
+          authorBook: this._vodData(res.data.author_books),
         };
       }
       return dataRes;
@@ -113,54 +110,43 @@ export default class Book extends Service {
       const theBook = await ctx.model.Book.findOne({ _id: chapter }).exec();
       if (theBook) {
         // 章节缓存一天
-        if (
-          Date.now() - new Date(theBook.meta.updateAt).getTime() >
-            1000 * 60 * 60 * 24 &&
-          theBook.status === "连载"
-        ) {
-          const fetchChpater = await ctx.helper
-            .Crawler()
-            .bookChapter(type, chapter);
+        if (Date.now() - new Date(theBook.meta.updateAt).getTime() > 1000 * 60 * 60 * 24 && theBook.status === '连载') {
+          const fetchChpater = await ctx.helper.Crawler().bookChapter(type, chapter);
           const _theBook = Object.assign(theBook, fetchChpater);
-          console.log(_theBook);
           await _theBook.save();
           return fetchChpater.chapters;
         }
         return theBook.chapters;
       } else {
-        const fetchChpater = await ctx.helper
-          .Crawler()
-          .bookChapter(type, chapter);
-        const _theBook = new ctx.model.Book(
-          Object.assign(fetchChpater, {
-            _id: chapter
-          })
-        );
+        const fetchChpater = await ctx.helper.Crawler().bookChapter(type, chapter);
+        const _theBook = new ctx.model.Book(Object.assign(fetchChpater, {_id: chapter}));
         await _theBook.save();
         return fetchChpater.chapters;
       }
-    } catch (error) {}
+    } catch (error) {
+      throw new Error(error);
+    }
   }
   /** 免费阅读 储存 */
   public async freeBookContext(type: number, chapter: number, id: number) {
     const { ctx } = this;
     try {
-      const theChapter = await ctx.model.Chapter.findOne({
-        id: `${chapter}&${id}`
-      }).exec();
+      const theChapter = await ctx.model.Chapter.findOne({id: `${chapter}&${id}`}).exec();
       if (!theChapter) {
-        console.log("find new chapter");
+        console.log('find new chapter');
         const res = await ctx.helper.Crawler().bookContext(type, chapter, id);
         const _chapter = new ctx.model.Chapter({
           id: `${chapter}&${id}`,
           title: res.title,
-          context: res.context
+          context: res.context,
         });
         await _chapter.save();
         return res;
       }
       return theChapter;
-    } catch (error) {}
+    } catch (error) {
+      throw new Error(error);
+    }
   }
   /** */
   /** 主页处理函数 */
@@ -180,7 +166,7 @@ export default class Book extends Service {
         rights: o.rights,
         score: o.score,
         summary: o.summary,
-        wordCount: o.word_count
+        wordCount: o.word_count,
       };
     });
   }
@@ -190,21 +176,21 @@ export default class Book extends Service {
       .map((o: any) => {
         return {
           img: o.ad_pic_url,
-          referenceId: o.reference_id
+          referenceId: o.reference_id,
         };
       });
   }
   private _homeListVod(item) {
     return {
       list: this._vodData(item.data.data),
-      referenceId: item.reference_id
+      referenceId: item.reference_id,
     };
   }
   private _homeRecommend(item) {
     const list = this._vodData(item.data.data);
     return {
       list: _.chunk(list, 15),
-      referenceId: item.reference_id
+      referenceId: item.reference_id,
     };
   }
   private _homeFree(item) {
@@ -212,24 +198,24 @@ export default class Book extends Service {
       return {
         id: o.data.fiction_id,
         cover: o.data.book_cover,
-        title: o.ad_name
+        title: o.ad_name,
       };
     });
     return {
       list,
-      referenceId: item.reference_id
+      referenceId: item.reference_id,
     };
   }
   private _homeTopic(item) {
     const list = item.data.data.map((o: any) => {
       return {
         img: o.ad_pic_url,
-        referenceId: o.reference_id
+        referenceId: o.reference_id,
       };
     });
     return {
       list,
-      referenceId: item.reference_id
+      referenceId: item.reference_id,
     };
   }
   /** banner 处理 */
@@ -239,37 +225,37 @@ export default class Book extends Service {
       label,
       banner,
       description,
-      list: this._vodData(items)
+      list: this._vodData(items),
     };
   }
   /** 频道处理 */
   private _channelHandle(data) {
     const { ad_setting_name, items } = data;
-    const group = items.map(o => {
+    const group = items.map((o) => {
       const { reference_id, ad_name, data } = o;
       return {
         referenceId: reference_id,
         name: ad_name,
-        list: this._vodData(data.data)
+        list: this._vodData(data.data),
       };
     });
     return {
       title: ad_setting_name,
-      list: group
+      list: group,
     };
   }
   /** 分类 */
   private _categoryHandle(data) {
     const { male, female } = data;
-    const mapList = items => {
-      return items.map(o => {
+    const mapList = (items) => {
+      return items.map((o) => {
         const {
           category_id,
           children,
           fiction_count,
           label,
           new_image,
-          new_image2
+          new_image2,
         } = o;
         return {
           id: category_id,
@@ -277,39 +263,39 @@ export default class Book extends Service {
           children,
           count: fiction_count,
           cover1: new_image,
-          cover2: new_image2
+          cover2: new_image2,
         };
       });
     };
     return {
       male: mapList(male),
-      female: mapList(female)
+      female: mapList(female),
     };
   }
   /** 排行 */
   private _rankHandle(data) {
     const { items } = data;
     const group = items.slice(18, items.length);
-    return group.map(o => {
+    return group.map((o) => {
       const { cover, description, name, ranks } = o;
       return {
         id: ranks,
         cover,
         name,
-        description: description.split("\n")
+        description: description.split('\n'),
       };
     });
   }
   /** 专题 请求 */
   private _recomendHandle(data) {
     const { items } = data;
-    return items.map(o => {
+    return items.map((o) => {
       const { ad_copy, ad_name, ad_pic_url, reference_id } = o;
       return {
         id: reference_id,
         name: ad_name,
         cover: ad_pic_url,
-        description: ad_copy
+        description: ad_copy,
       };
     });
   }

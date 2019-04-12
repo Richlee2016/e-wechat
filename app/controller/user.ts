@@ -1,13 +1,13 @@
-import { Controller } from "egg";
-import { Contro, Get, Post,Prefix } from "../router";
+import { Controller } from 'egg';
+import { Contro, Get, Post, Prefix } from '../router';
 @Prefix(['user'])
-@Contro("/User")
+@Contro('/User')
 export default class UserController extends Controller {
   /**
    * 标签增删改查
    * @param body
    */
-  @Post("/Tag")
+  @Post('/Tag')
   public async handlleTag() {
     const { ctx } = this;
     const { method, tag } = ctx.request.body;
@@ -18,7 +18,7 @@ export default class UserController extends Controller {
    * 获取标签下粉丝
    * @param query
    */
-  @Post("/UserTag")
+  @Post('/UserTag')
   public async fetchUserTag() {
     const { ctx } = this;
     const body = ctx.request.body;
@@ -29,7 +29,7 @@ export default class UserController extends Controller {
    * 粉丝标签管理
    * @param body
    */
-  @Post("/MembersTag")
+  @Post('/MembersTag')
   public async membersTag() {
     const { ctx } = this;
     const { method, member } = ctx.request.body;
@@ -40,7 +40,7 @@ export default class UserController extends Controller {
    * 获取粉丝下的标签
    * @param query
    */
-  @Get("/IdTag")
+  @Get('/IdTag')
   public async getidTag() {
     const { ctx } = this;
     const { openid } = ctx.query;
@@ -51,7 +51,7 @@ export default class UserController extends Controller {
    * 获取用户列表
    * @param query
    */
-  @Get("/UserList")
+  @Get('/UserList')
   public async fetchUserList() {
     const { ctx } = this;
     const { next_openid } = ctx.query;
@@ -62,7 +62,7 @@ export default class UserController extends Controller {
    * 获取用户信息
    * @param query
    */
-  @Get("/UnionId")
+  @Get('/UnionId')
   public async fetchUnionId() {
     const { ctx } = this;
     const { openid } = ctx.query;
@@ -73,7 +73,7 @@ export default class UserController extends Controller {
    * 批量用户信息
    * @param body
    */
-  @Post("/UnionIds")
+  @Post('/UnionIds')
   public async fetchUnionIds() {
     const { ctx } = this;
     const { user_list } = ctx.request.body;
@@ -84,7 +84,7 @@ export default class UserController extends Controller {
    * 获取黑名单列表
    * @param query
    */
-  @Get("/BlackList")
+  @Get('/BlackList')
   public async fetchBlackList() {
     const { ctx } = this;
     const { next_openid } = ctx.query;
@@ -95,7 +95,7 @@ export default class UserController extends Controller {
    * 拉入黑名单
    * @param body
    */
-  @Post("/CreateBlack")
+  @Post('/CreateBlack')
   public async createBlack() {
     const { ctx } = this;
     const { openid_list } = ctx.request.body;
@@ -106,7 +106,7 @@ export default class UserController extends Controller {
    * 删除黑名单
    * @param body
    */
-  @Post("/DeleteBlack")
+  @Post('/DeleteBlack')
   public async deleteBlack() {
     const { ctx } = this;
     const { openid_list } = ctx.request.body;

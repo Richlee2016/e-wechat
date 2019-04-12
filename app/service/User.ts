@@ -1,5 +1,5 @@
-import { Service } from "egg";
-import * as Rxios from "request-promise-native";
+import { Service } from 'egg';
+import * as Rxios from 'request-promise-native';
 /**
  * Test Service
  */
@@ -10,29 +10,28 @@ export default class User extends Service {
    * @param tag 标签
    */
   public async handleTag(
-    method: "create" | "get" | "update" | "delete",
-    tag: { id?: number; name?: string; count?: number }
+    method: 'create' | 'get' | 'update' | 'delete',
+    tag: { id?: number; name?: string; count?: number },
   ) {
-    // const { ctx } = this;
     const { token, WxTagConfig } = await this._getTabToken();
-    let opt: any = {
-      method: "POST",
-      json: true
+    const opt: any = {
+      method: 'POST',
+      json: true,
     };
     let baseUrl = WxTagConfig.createTag(token);
     switch (method) {
-      case "create":
+      case 'create':
         opt.body = { tag };
         break;
-      case "get":
-        opt.method = "GET";
+      case 'get':
+        opt.method = 'GET';
         baseUrl = WxTagConfig.fetchTag(token);
         break;
-      case "update":
+      case 'update':
         baseUrl = WxTagConfig.updateTag(token);
         opt.body = { tag };
         break;
-      case "delete":
+      case 'delete':
         baseUrl = WxTagConfig.deleteTag(token);
         opt.body = { tag };
         break;
@@ -42,7 +41,7 @@ export default class User extends Service {
       const res = await Rxios(opt);
       return res;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /**
@@ -51,17 +50,17 @@ export default class User extends Service {
    */
   public async fetchUserTag(userTag: { tagid: number; next_openid?: string }) {
     const { token, WxTagConfig } = await this._getTabToken();
-    let opt: any = {
-      method: "POST",
+    const opt: any = {
+      method: 'POST',
       url: WxTagConfig.fetchUserTag(token),
       body: userTag,
-      json: true
+      json: true,
     };
     try {
       const res = await Rxios(opt);
       return res;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /**
@@ -71,7 +70,7 @@ export default class User extends Service {
    */
   public async membersTag(
     method: 1 | 0,
-    userTag: { tagid: number; openid_list?: string[] }
+    userTag: { tagid: number; openid_list?: string[] },
   ) {
     const { token, WxTagConfig } = await this._getTabToken();
     let baseUrl = WxTagConfig.batchtTag(token);
@@ -80,14 +79,14 @@ export default class User extends Service {
     }
     try {
       const res = await Rxios({
-        url:baseUrl,
-        method: "POST",
+        url: baseUrl,
+        method: 'POST',
         body: userTag,
-        json: true
+        json: true,
       });
       return res;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /**
@@ -100,11 +99,11 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxTagConfig.getidTag(token),
-        opt("POST", { openid })
+        opt('POST', { openid }),
       );
       return res.data;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /**
@@ -117,11 +116,11 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxUserConfig.fetchUserList(token, openid),
-        opt()
+        opt(),
       );
       return res.data;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /**
@@ -134,11 +133,11 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxUserConfig.createMark(token),
-        opt("POST", mark)
+        opt('POST', mark),
       );
       return res;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /**
@@ -151,11 +150,11 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxUserConfig.fetchUnionId(token, openid),
-        opt()
+        opt(),
       );
       return res.data;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /**
@@ -163,22 +162,21 @@ export default class User extends Service {
    * @param user_list
    */
   public async fetchUnionIds(
-    user_list: Array<{ openid: string; lang?: string }>
+    user_list: Array<{ openid: string; lang?: string }>,
   ) {
     // const { ctx } = this;
     const { token, WxUserConfig, opt } = await this._getTabToken();
-    user_list.forEach(o => (o.lang = "zh_CN"));
-    console.log(WxUserConfig.fetchUnionIds(token), opt("POST", { user_list }));
+    user_list.forEach((o) => (o.lang = 'zh_CN'));
     try {
       const res = await Rxios({
-        url:WxUserConfig.fetchUnionIds(token),
-        method:'POST',
-        body:user_list,
-        json:true
-      })
+        url: WxUserConfig.fetchUnionIds(token),
+        method: 'POST',
+        body: user_list,
+        json: true,
+      });
       return res;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /**
@@ -191,11 +189,11 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxUserConfig.fetchBlackList(token),
-        opt("POST", { begin_openid })
+        opt('POST', { begin_openid }),
       );
       return res.data;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /**
@@ -208,11 +206,11 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxUserConfig.createBlack(token),
-        opt("POST", { openid_list })
+        opt('POST', { openid_list }),
       );
       return res.data;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /**
@@ -225,11 +223,11 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxUserConfig.deleteBlack(token),
-        opt("POST", { openid_list })
+        opt('POST', { openid_list }),
       );
       return res.data;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
   /**
@@ -246,24 +244,24 @@ export default class User extends Service {
     const { app, ctx } = this;
     const token = await ctx.service.token.createToken();
     const {
-      Wx: { WxTagConfig, WxUserConfig }
+      Wx: { WxTagConfig, WxUserConfig },
     } = app.config;
-    let optFun = (
-      method?: "GET" | "POST",
-      data?: any
-    ): { method: "GET" | "POST"; data?: any; dataType: string } => {
-      let dataType = "json";
-      if (method === "POST") {
-        return { method: "POST", data, dataType };
+    const optFun = (
+      method?: 'GET' | 'POST',
+      data?: any,
+    ): { method: 'GET' | 'POST'; data?: any; dataType: string } => {
+      const dataType = 'json';
+      if (method === 'POST') {
+        return { method: 'POST', data, dataType };
       } else {
-        return { method: "GET", dataType };
+        return { method: 'GET', dataType };
       }
     };
     return {
       token,
       WxTagConfig,
       WxUserConfig,
-      opt: optFun
+      opt: optFun,
     };
   }
 }

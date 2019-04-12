@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app) => {
   const mongoose = app.mongoose;
   const Mixed = mongoose.Schema.Types.Mixed;
   const MessageSchema = new mongoose.Schema({
@@ -18,7 +18,7 @@ module.exports = app => {
     }
   });
 
-  MessageSchema.pre("save", function(next) {
+  MessageSchema.pre('save', function(next) {
     if (MessageSchema.isNew) {
       MessageSchema.meta.createAt = MessageSchema.meta.updateAt = Date.now();
     } else {
@@ -27,8 +27,5 @@ module.exports = app => {
     next();
   });
 
-
-
-
-  return mongoose.model("t_reply_table", MessageSchema);
+  return mongoose.model('t_reply_table', MessageSchema);
 };

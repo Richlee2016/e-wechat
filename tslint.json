@@ -9,7 +9,6 @@
     "no-console": [
       true,
       "dir",
-      "log",
       "error",
       "warn"
     ],
@@ -34,10 +33,16 @@
       10
     ],
     "variable-name": [
-      true,
+      false,
       "allow-leading-underscore"
     ],
-    "align": [true, "statements"]
+    "align": [true, "statements"],
+    "switch-default": false,
+    "trailing-comma": false,
+    "max-line-length": false,
+    "no-var-requires": false,
+    "no-string-literal": false,
+    "only-arrow-functions": false
   }
 }
 

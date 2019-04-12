@@ -1,4 +1,4 @@
-import { Service } from "egg";
+import { Service } from 'egg';
 /**
  * Test Service
  */
@@ -9,9 +9,9 @@ export default class Home extends Service {
     const {
       Wx: { WxConfig }
     } = app.config;
-    const token =await ctx.service.token.createToken();
-    let opt: any = {
-      method: "POST",
+    const token = await ctx.service.token.createToken();
+    const opt: any = {
+      method: 'POST',
       data: {
         appid: WxConfig.Appid
       }
@@ -33,9 +33,9 @@ export default class Home extends Service {
     const {
       Wx: { WxConfig }
     } = app.config;
-    const token =await ctx.service.token.createToken();
+    const token = await ctx.service.token.createToken();
     const opt: any = {
-      method: "POST",
+      method: 'POST',
       data: WxConfig.Menus,
       dataType: true
     };

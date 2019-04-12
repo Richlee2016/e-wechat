@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app) => {
   const mongoose = app.mongoose;
   const MovieSchema = new mongoose.Schema({
     _id: Number,
@@ -30,7 +30,7 @@ module.exports = app => {
     }
   });
 
-  MovieSchema.pre("save", function(this: any, next) {
+  MovieSchema.pre('save', function(this: any, next) {
     if (this.isNew) {
       this.meta.createAt = this.meta.updateAt = Date.now();
     } else {
@@ -39,6 +39,6 @@ module.exports = app => {
     next();
   });
 
-  const Book = mongoose.model("t_movie_home", MovieSchema);
+  const Book = mongoose.model('t_movie_home', MovieSchema);
   return Book;
 };

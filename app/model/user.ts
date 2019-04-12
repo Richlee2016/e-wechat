@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app) => {
   const mongoose = app.mongoose;
   const UserSchema = new mongoose.Schema({
     _id: String,
@@ -15,7 +15,7 @@ module.exports = app => {
     }
   });
 
-  UserSchema.pre("save", function(next) {
+  UserSchema.pre('save', function(next) {
     if (UserSchema.isNew) {
       UserSchema.meta.createAt = UserSchema.meta.updateAt = Date.now();
     } else {
@@ -24,5 +24,5 @@ module.exports = app => {
     next();
   });
 
-  return mongoose.model("t_user_table", UserSchema);
+  return mongoose.model('t_user_table', UserSchema);
 };

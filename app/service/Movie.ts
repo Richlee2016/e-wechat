@@ -1,5 +1,5 @@
-import { Service } from "egg";
-import { SearchMovie } from "../interface/movie.interface";
+import { Service } from 'egg';
+import { SearchMovie } from '../interface/movie.interface';
 export default class Movie extends Service {
   // 获取单个电影
   public async getMovie(id: string | number) {
@@ -14,18 +14,18 @@ export default class Movie extends Service {
   // 根据url参数 筛选电影
   public async getMovies(q: SearchMovie) {
     const { ctx } = this;
-    let { page = 1, size = 10 } = q;
-    let query: Array<any> = [{ id: { $exists: true } }];
-    for (let [key, val] of Object.entries(q)) {
-      let data = {};
-      if (!["page", "size"].includes(key)) {
+    const { page = 1, size = 10 } = q;
+    const query: any[] = [{ id: { $exists: true } }];
+    for (const [key, val] of Object.entries(q)) {
+      const data = {};
+      if (!['page', 'size'].includes(key)) {
         data[key] = val;
         query.push(data);
       }
     }
-    let skip = (page - 1) * size;
-    let search = {
-      name: { $ne: "none" },
+    const skip = (page - 1) * size;
+    const search = {
+      name: { $ne: 'none' },
       $and: query
     };
     try {
@@ -56,18 +56,18 @@ export default class Movie extends Service {
     size?: number;
   }) {
     const { ctx } = this;
-    let { keyword, page = 1, size = 10 } = q;
-    let reg = new RegExp(keyword);
-    let query: any = {
+    const { keyword, page = 1, size = 10 } = q;
+    const reg = new RegExp(keyword);
+    const query: any = {
       $or: [{ name: { $regex: reg } }]
     };
     if (keyword.length >= 2) {
-      query["$or"].concat([
+      query['$or'].concat([
         { actor: { $regex: reg } },
         { director: { $regex: reg } }
       ]);
     }
-    let skip = (page - 1) * size;
+    const skip = (page - 1) * size;
     try {
       const counts = await ctx.model.Movie.countDocuments(query).exec();
       const list = await ctx.model.Movie.find(query)

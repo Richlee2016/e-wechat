@@ -1,17 +1,17 @@
-module.exports = app => {
+module.exports = (app) => {
   const mongoose = app.mongoose;
   const ChapterSchema = new mongoose.Schema({
     id: {
-      type:String,
-      require:true
+      type: String,
+      require: true
     },
     title: {
-      type:String,
-      require:true
+      type: String,
+      require: true
     },
-    context:{
-      type:Array,
-      require:true
+    context: {
+      type: Array,
+      require: true
     },
     meta: {
       createAt: {
@@ -25,7 +25,7 @@ module.exports = app => {
     }
   });
 
-  ChapterSchema.pre("save", function(this:any,next,) {
+  ChapterSchema.pre('save', function(this: any, next, ) {
     if (this.isNew) {
       this.meta.createAt = this.meta.updateAt = Date.now();
     } else {
@@ -34,5 +34,5 @@ module.exports = app => {
     next();
   });
 
-  return mongoose.model("t_chapter_table", ChapterSchema);
+  return mongoose.model('t_chapter_table', ChapterSchema);
 };

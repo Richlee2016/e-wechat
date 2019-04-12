@@ -1,18 +1,18 @@
 import { Context } from 'egg';
 
 /**
- * 
- * @param opt 
+ *
+ * @param opt
  * ['@cache'] 永久储存
  * [['@cache',{time:10}]]  储存10秒
  */
 // 请求缓存
-export default function fooMiddleware(opt:{time:number}): any {
+export default function fooMiddleware(opt: {time: number}): any {
   return async (ctx: Context, next: () => Promise<any>) => {
     const {url, method} = ctx;
     const saveKey = method === 'GET' ? url : JSON.stringify(ctx.request.body).trim();
     let Cache: string | null = null;
-    if (opt.time){
+    if (opt.time) {
       Cache = await ctx.app.redis.get(saveKey);
     }else{
       Cache = await ctx.app.redis.hget('forever', saveKey);

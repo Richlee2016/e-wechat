@@ -1,7 +1,7 @@
-module.exports = app => {
+module.exports = (app) => {
   const mongoose = app.mongoose;
   const BookSchema = new mongoose.Schema({
-    _id:String,
+    _id: String,
     name: String,
     preid: String,
     id: String,
@@ -25,7 +25,7 @@ module.exports = app => {
     }
   });
 
-  BookSchema.pre("save", function(this:any,next,) {
+  BookSchema.pre('save', function(this: any, next, ) {
     if (this.isNew) {
       this.meta.createAt = this.meta.updateAt = Date.now();
     } else {
@@ -34,6 +34,6 @@ module.exports = app => {
     next();
   });
 
-  const Book =  mongoose.model("t_book_table", BookSchema);
-  return Book
+  const Book =  mongoose.model('t_book_table', BookSchema);
+  return Book;
 };
