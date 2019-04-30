@@ -30,14 +30,14 @@ export default (appInfo: EggAppInfo) => {
   // };
   // mongodb
   config.mongoose = {
-    url: 'mongodb://127.0.0.1:27017/wechat',
+    url: 'mongodb://120.79.228.82:27017/wechat',
     options: {}
   };
   // redis
   config.redis = {
     client: {
       port: 6379,
-      host: '127.0.0.1',
+      host: '120.79.228.82',
       password: 'auth',
       db: 0
     }
