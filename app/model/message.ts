@@ -1,4 +1,4 @@
-module.exports = (app) => {
+module.exports = app => {
   const mongoose = app.mongoose;
   const Mixed = mongoose.Schema.Types.Mixed;
   const MessageSchema = new mongoose.Schema({
@@ -9,13 +9,13 @@ module.exports = (app) => {
     meta: {
       createAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
       },
       updateAt: {
         type: Date,
-        default: Date.now()
-      }
-    }
+        default: Date.now(),
+      },
+    },
   });
 
   MessageSchema.pre('save', function(next) {

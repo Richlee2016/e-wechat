@@ -27,23 +27,24 @@ const MapRouter: any = [];
 export default async (app: Application) => {
   const { controller, router } = app;
   const autoMids = app.config.autoMiddlware;
-  MapRouter.forEach((r) => {
+  MapRouter.forEach(r => {
     // if(r.name === 'book'){
     //   console.log(JSON.stringify(r.methods));
     // }
     // 文件 前缀
     let pcontro = controller;
-    r.prefix.forEach((o) => {
+    r.prefix.forEach(o => {
       pcontro = pcontro[o];
     });
     // 路径 控制器
     const preUrl: any = r.path === '/' ? '' : r.path;
     const len = r.prefix.length;
-    const cpath = len >= 2 ? '/' + r.prefix.slice(0, len - 1).join('/') + preUrl : preUrl;
+    const cpath =
+      len >= 2 ? '/' + r.prefix.slice(0, len - 1).join('/') + preUrl : preUrl;
     if (!pcontro) return false;
     const cmiddlewares = r.middlewares;
     // 路由 中间件添加
-    r.methods.forEach((m) => {
+    r.methods.forEach(m => {
       const allMids = cmiddlewares.concat(m.middlewares);
       const initMids = initMiddleware(allMids, autoMids);
       const finllMids = initMids.concat(pcontro[m.name]);
@@ -56,17 +57,17 @@ export default async (app: Application) => {
 /** 解析 内置 中间件 */
 const initMiddleware = (ms, mids) => {
   if (ms.length === 0) return [];
-  const handlMs = ms.map((o) => {
+  const handlMs = ms.map(o => {
     if (_.isString(o)) {
       return _.chain(mids)
-        .find((m) => m.name === o)
-        .thru((mid) => (mid ? mid.middlware(mid.opt) : ''))
+        .find(m => m.name === o)
+        .thru(mid => (mid ? mid.middlware(mid.opt) : ''))
         .value();
     } else if (_.isArray(o)) {
       if (o.length === 2) {
         return _.chain(mids)
-          .find((m) => m.name === o[0])
-          .thru((mid) => (mid ? mid.middlware(o[1] || mid.opt) : ''))
+          .find(m => m.name === o[0])
+          .thru(mid => (mid ? mid.middlware(o[1] || mid.opt) : ''))
           .value();
       } else {
         return '';
@@ -85,9 +86,9 @@ const getControllerName = (name): string => {
   return controller.toLowerCase();
 };
 /** 获取 controller 名称 */
-export const Contro = (path: string, middlewares: any[] = []) => (target) => {
+export const Contro = (path: string, middlewares: any[] = []) => target => {
   const cname = getControllerName(target.name);
-  MapRouter.forEach((o) => {
+  MapRouter.forEach(o => {
     if (o.name === cname) {
       o.path = path;
       o.middlewares = middlewares;
@@ -100,9 +101,9 @@ const setRouter = (path: string, method: string, middlewares: any[] = []) => (
   name
 ) => {
   const cname = getControllerName(target.constructor.name);
-  const isExist = MapRouter.some((o) => o.name === cname);
+  const isExist = MapRouter.some(o => o.name === cname);
   if (isExist) {
-    MapRouter.forEach((o) => {
+    MapRouter.forEach(o => {
       if (o.name === cname) {
         o.methods.push({ name, path, method, middlewares });
       }
@@ -110,7 +111,7 @@ const setRouter = (path: string, method: string, middlewares: any[] = []) => (
   } else {
     MapRouter.push({
       name: cname,
-      methods: [{ name, path, method, middlewares }]
+      methods: [{ name, path, method, middlewares }],
     });
   }
 };
@@ -121,9 +122,9 @@ export const Post = (path: string, middlewares?: any[]) =>
   setRouter(path, 'post', middlewares);
 
 /** 嵌套文件前缀获取 */
-export const Prefix = (prefix: string[]) => (target) => {
+export const Prefix = (prefix: string[]) => target => {
   const cname = getControllerName(target.name);
-  MapRouter.forEach((o) => {
+  MapRouter.forEach(o => {
     if (o.name === cname) {
       o.prefix = prefix;
     }

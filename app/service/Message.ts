@@ -4,7 +4,7 @@ import * as xml2js from 'xml2js';
 import {
   MessagePost,
   MessageSchema,
-  MessageXml
+  MessageXml,
 } from '../interface/message.interface';
 /**
  * 消息回复 Service
@@ -16,7 +16,7 @@ export default class Message extends Service {
   public async HandleMessage(query: MessagePost, message): Promise<string> {
     const { app } = this;
     const {
-      Wx: { WxConfig }
+      Wx: { WxConfig },
     } = app.config;
     const { signature, timestamp, nonce } = query;
     const str = [WxConfig.Token, timestamp, nonce].sort().join('');
@@ -107,7 +107,7 @@ export default class Message extends Service {
     const { MsgType, ToUserName, FromUserName, Content } = message;
     replyMsg = await ctx.model.Message.findOne({
       MsgType,
-      Content
+      Content,
     }).exec();
     if (!replyMsg) {
       return '';
@@ -119,7 +119,7 @@ export default class Message extends Service {
 
     const reply: MessageXml = Object.assign(replyMsg, {
       ToUserName: FromUserName,
-      FromUserName: ToUserName
+      FromUserName: ToUserName,
     });
     const replyText = this._tep(reply.Reply);
     return this._repcommom(reply, replyText);
@@ -153,7 +153,7 @@ export default class Message extends Service {
                 <ThumbMediaId><![CDATA[${Reply.ThumbMediaId}]]></ThumbMediaId>
               </Music>`;
     } else if (type === 'news' && Reply.Content) {
-      const items: string[] = (Reply.Content as MessageXml[]).map((item) => {
+      const items: string[] = (Reply.Content as MessageXml[]).map(item => {
         return `<item>
                   <Title><![CDATA[${item.Title}]]></Title>
                   <Description><![CDATA[${item.Description}]]></Description>

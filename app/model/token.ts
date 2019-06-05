@@ -1,4 +1,4 @@
-module.exports = (app) => {
+module.exports = app => {
   const mongoose = app.mongoose;
   const TokenSchema = new mongoose.Schema({
     name: String,
@@ -10,13 +10,13 @@ module.exports = (app) => {
     meta: {
       createAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
       },
       updateAt: {
         type: Date,
-        default: Date.now()
-      }
-    }
+        default: Date.now(),
+      },
+    },
   });
 
   TokenSchema.pre('save', function(next) {

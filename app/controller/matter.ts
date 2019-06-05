@@ -1,5 +1,5 @@
 import { Controller } from 'egg';
-import { Contro, Get, Post, Prefix} from '../router';
+import { Contro, Get, Post, Prefix } from '../router';
 // import * as path from 'path'
 // import sendToWormhole from 'stream-wormhole'
 @Prefix(['matter'])
@@ -34,7 +34,7 @@ export default class MatterController extends Controller {
     const token = await ctx.service.token.createToken();
     const res = await ctx.service.matter.createMatterNews(
       token,
-      ctx.request.body.articles,
+      ctx.request.body.articles
     );
     ctx.body = res;
   }

@@ -9,7 +9,10 @@ export default function ErrorHandlerMiddleware(): any {
     } catch (err) {
       app.emit('error', err);
       const status = err.status || 500;
-      const error_msg = status === 500 && app.config.env === 'prod' ? 'Internal Server Error' : err.message;
+      const error_msg =
+        status === 500 && app.config.env === 'prod'
+          ? 'Internal Server Error'
+          : err.message;
       ctx.body = { error_msg };
       ctx.body.success = false;
       if (status === 422) {

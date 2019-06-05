@@ -3,5 +3,5 @@ import { Context } from 'egg';
 export default {
   Rxios(this: Context) {
     return 1;
-  }
+  },
 };

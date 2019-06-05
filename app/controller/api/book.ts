@@ -1,14 +1,14 @@
-import { Controller } from "egg";
-import { Contro, Get, Prefix } from "../../router";
+import { Controller } from 'egg';
+import { Contro, Get, Prefix } from '../../router';
 
-@Prefix(["api", "book"])
-@Contro("/book")
+@Prefix(['api', 'book'])
+@Contro('/book')
 export default class ApiBookController extends Controller {
-  @Get("/my")
+  @Get('/my')
   public async my() {
     this.ctx.body = 2;
   }
-  @Get("myqqq")
+  @Get('myqqq')
   public async my1() {
     this.ctx.body = 2;
   }

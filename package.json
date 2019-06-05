@@ -21,7 +21,7 @@
     "ci": "npm run lint && npm run cov && npm run tsc",
     "autod": "autod",
     "lint": "tslint --project . -c tslint.json",
-    "fix":  "tslint --project ./tsconfig.json --type-check --fix",
+    "fix": "tslint --project ./tsconfig.json --type-check --fix",
     "clean": "ets clean",
     "lint:ts": "tslint -p . --type-check",
     "fix:ts": "tslint -p ./tsconfig.json --type-check --fix"
@@ -58,7 +58,7 @@
     "@types/supertest": "^2.0.0",
     "autod": "^3.0.1",
     "autod-egg": "^1.1.0",
-    "egg-bin": "^4.6.2",
+    "egg-bin": "^4.13.1",
     "egg-ci": "^1.8.0",
     "egg-mock": "^3.16.0",
     "egg-ts-helper": "^1.11.0",

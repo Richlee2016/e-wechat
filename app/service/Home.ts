@@ -7,14 +7,14 @@ export default class Home extends Service {
   async clearApi() {
     const { app, ctx } = this;
     const {
-      Wx: { WxConfig }
+      Wx: { WxConfig },
     } = app.config;
     const token = await ctx.service.token.createToken();
     const opt: any = {
       method: 'POST',
       data: {
-        appid: WxConfig.Appid
-      }
+        appid: WxConfig.Appid,
+      },
     };
     console.log(opt);
     try {
@@ -31,13 +31,13 @@ export default class Home extends Service {
   async createMenus() {
     const { app, ctx } = this;
     const {
-      Wx: { WxConfig }
+      Wx: { WxConfig },
     } = app.config;
     const token = await ctx.service.token.createToken();
     const opt: any = {
       method: 'POST',
       data: WxConfig.Menus,
-      dataType: true
+      dataType: true,
     };
     try {
       await ctx.curl(

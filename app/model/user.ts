@@ -1,4 +1,4 @@
-module.exports = (app) => {
+module.exports = app => {
   const mongoose = app.mongoose;
   const UserSchema = new mongoose.Schema({
     _id: String,
@@ -6,13 +6,13 @@ module.exports = (app) => {
     meta: {
       createAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
       },
       updateAt: {
         type: Date,
-        default: Date.now()
-      }
-    }
+        default: Date.now(),
+      },
+    },
   });
 
   UserSchema.pre('save', function(next) {

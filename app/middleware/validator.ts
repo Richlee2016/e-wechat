@@ -16,7 +16,7 @@ export default function validatorMiddleware(arg: arg): any {
     if (ty === 'query') {
       validData = ctx.query;
     }
-    return Joi.validate(validData, arg.valid, (err) => {
+    return Joi.validate(validData, arg.valid, err => {
       if (err !== null) {
         if (arg.handle) {
           arg.handle(err, ctx, next);

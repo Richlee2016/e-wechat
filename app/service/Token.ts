@@ -5,9 +5,13 @@ export default class TokenServer extends Service {
   public async fetchToken() {
     const { app, ctx } = this;
     const {
-      Wx: { WxConfig }
+      Wx: { WxConfig },
     } = app.config;
-    const baseUrl = `${WxConfig.Prefix}/token?grant_type=client_credential&appid=${WxConfig.Appid}&secret=${WxConfig.Secret}`;
+    const baseUrl = `${
+      WxConfig.Prefix
+    }/token?grant_type=client_credential&appid=${WxConfig.Appid}&secret=${
+      WxConfig.Secret
+    }`;
     console.log('请求了一次token---------------------');
     try {
       const getToken = await ctx.curl(baseUrl, { dataType: 'json' });
@@ -38,10 +42,12 @@ export default class TokenServer extends Service {
   public async fetchOauthToken(code) {
     const { app, ctx } = this;
     const {
-      Wx: { WxOpenIdConfig }
+      Wx: { WxOpenIdConfig },
     } = app.config;
     try {
-      const getOauthToken = await ctx.curl(WxOpenIdConfig.getToken(code), {dataType: 'json'});
+      const getOauthToken = await ctx.curl(WxOpenIdConfig.getToken(code), {
+        dataType: 'json',
+      });
       return getOauthToken;
     } catch (error) {
       throw new Error(error);

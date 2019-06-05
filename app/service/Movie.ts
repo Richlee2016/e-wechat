@@ -26,7 +26,7 @@ export default class Movie extends Service {
     const skip = (page - 1) * size;
     const search = {
       name: { $ne: 'none' },
-      $and: query
+      $and: query,
     };
     try {
       const counts = await ctx.model.Movie.countDocuments(search).exec();
@@ -34,7 +34,7 @@ export default class Movie extends Service {
         name: 1,
         year: 1,
         img: 1,
-        cover: 1
+        cover: 1,
       })
         .sort({ _id: -1 })
         .limit(size)
@@ -43,7 +43,7 @@ export default class Movie extends Service {
 
       return {
         list: movielist,
-        count: counts
+        count: counts,
       };
     } catch (error) {
       console.log(error);
@@ -59,12 +59,12 @@ export default class Movie extends Service {
     const { keyword, page = 1, size = 10 } = q;
     const reg = new RegExp(keyword);
     const query: any = {
-      $or: [{ name: { $regex: reg } }]
+      $or: [{ name: { $regex: reg } }],
     };
     if (keyword.length >= 2) {
       query['$or'].concat([
         { actor: { $regex: reg } },
-        { director: { $regex: reg } }
+        { director: { $regex: reg } },
       ]);
     }
     const skip = (page - 1) * size;

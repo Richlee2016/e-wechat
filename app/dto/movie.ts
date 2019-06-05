@@ -10,8 +10,8 @@ export const MovieVodsDto = validator({
     director: Joi.string(),
     actor: Joi.string(),
     classify: Joi.string(),
-    catalog: Joi.string()
-  })
+    catalog: Joi.string(),
+  }),
 });
 
 // 搜索守卫
@@ -20,6 +20,6 @@ export const MovieSearchDto = validator({
   valid: Joi.object().keys({
     keyword: Joi.string().required(),
     page: Joi.number(),
-    size: Joi.number()
-  })
+    size: Joi.number(),
+  }),
 });

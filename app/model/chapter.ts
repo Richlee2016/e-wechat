@@ -1,31 +1,31 @@
-module.exports = (app) => {
+module.exports = app => {
   const mongoose = app.mongoose;
   const ChapterSchema = new mongoose.Schema({
     id: {
       type: String,
-      require: true
+      require: true,
     },
     title: {
       type: String,
-      require: true
+      require: true,
     },
     context: {
       type: Array,
-      require: true
+      require: true,
     },
     meta: {
       createAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
       },
       updateAt: {
         type: Date,
-        default: Date.now()
-      }
-    }
+        default: Date.now(),
+      },
+    },
   });
 
-  ChapterSchema.pre('save', function(this: any, next, ) {
+  ChapterSchema.pre('save', function(this: any, next) {
     if (this.isNew) {
       this.meta.createAt = this.meta.updateAt = Date.now();
     } else {

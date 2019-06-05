@@ -1,4 +1,4 @@
-module.exports = (app) => {
+module.exports = app => {
   const mongoose = app.mongoose;
   const MovieSchema = new mongoose.Schema({
     _id: Number,
@@ -21,13 +21,13 @@ module.exports = (app) => {
     meta: {
       createAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
       },
       updateAt: {
         type: Date,
-        default: Date.now()
-      }
-    }
+        default: Date.now(),
+      },
+    },
   });
 
   MovieSchema.pre('save', function(this: any, next) {

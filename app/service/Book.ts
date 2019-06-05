@@ -10,7 +10,10 @@ export default class Book extends Service {
     const { ctx, app } = this;
     const { xmBook } = app.config;
     try {
-      const res = await ctx.curl(`${xmBook.prefix}/hs/v3/channel/418`, this.commonOpt);
+      const res = await ctx.curl(
+        `${xmBook.prefix}/hs/v3/channel/418`,
+        this.commonOpt
+      );
       const [banner, hot, recommend, boy, girl, free, topic] = res.data.items;
       return {
         banner: this._homeBanner(banner),
@@ -35,7 +38,7 @@ export default class Book extends Service {
     try {
       const res = await ctx.curl(
         `${xmBook.prefix}/rock/book/recommend?start=${start}&count=${count}`,
-        opt,
+        opt
       );
       return this._vodData(res.data.items);
     } catch (error) {
@@ -47,7 +50,7 @@ export default class Book extends Service {
   public async bookProxy(
     method: 'GET' | 'POST' = 'GET',
     url: string,
-    data?: any,
+    data?: any
   ) {
     const { ctx, app } = this;
     const { xmBook } = app.config;
@@ -110,16 +113,26 @@ export default class Book extends Service {
       const theBook = await ctx.model.Book.findOne({ _id: chapter }).exec();
       if (theBook) {
         // 章节缓存一天
-        if (Date.now() - new Date(theBook.meta.updateAt).getTime() > 1000 * 60 * 60 * 24 && theBook.status === '连载') {
-          const fetchChpater = await ctx.helper.Crawler().bookChapter(type, chapter);
+        if (
+          Date.now() - new Date(theBook.meta.updateAt).getTime() >
+            1000 * 60 * 60 * 24 &&
+          theBook.status === '连载'
+        ) {
+          const fetchChpater = await ctx.helper
+            .Crawler()
+            .bookChapter(type, chapter);
           const _theBook = Object.assign(theBook, fetchChpater);
           await _theBook.save();
           return fetchChpater.chapters;
         }
         return theBook.chapters;
       } else {
-        const fetchChpater = await ctx.helper.Crawler().bookChapter(type, chapter);
-        const _theBook = new ctx.model.Book(Object.assign(fetchChpater, {_id: chapter}));
+        const fetchChpater = await ctx.helper
+          .Crawler()
+          .bookChapter(type, chapter);
+        const _theBook = new ctx.model.Book(
+          Object.assign(fetchChpater, { _id: chapter })
+        );
         await _theBook.save();
         return fetchChpater.chapters;
       }
@@ -131,7 +144,9 @@ export default class Book extends Service {
   public async freeBookContext(type: number, chapter: number, id: number) {
     const { ctx } = this;
     try {
-      const theChapter = await ctx.model.Chapter.findOne({id: `${chapter}&${id}`}).exec();
+      const theChapter = await ctx.model.Chapter.findOne({
+        id: `${chapter}&${id}`,
+      }).exec();
       if (!theChapter) {
         console.log('find new chapter');
         const res = await ctx.helper.Crawler().bookContext(type, chapter, id);
@@ -231,7 +246,7 @@ export default class Book extends Service {
   /** 频道处理 */
   private _channelHandle(data) {
     const { ad_setting_name, items } = data;
-    const group = items.map((o) => {
+    const group = items.map(o => {
       const { reference_id, ad_name, data } = o;
       return {
         referenceId: reference_id,
@@ -247,8 +262,8 @@ export default class Book extends Service {
   /** 分类 */
   private _categoryHandle(data) {
     const { male, female } = data;
-    const mapList = (items) => {
-      return items.map((o) => {
+    const mapList = items => {
+      return items.map(o => {
         const {
           category_id,
           children,
@@ -276,7 +291,7 @@ export default class Book extends Service {
   private _rankHandle(data) {
     const { items } = data;
     const group = items.slice(18, items.length);
-    return group.map((o) => {
+    return group.map(o => {
       const { cover, description, name, ranks } = o;
       return {
         id: ranks,
@@ -289,7 +304,7 @@ export default class Book extends Service {
   /** 专题 请求 */
   private _recomendHandle(data) {
     const { items } = data;
-    return items.map((o) => {
+    return items.map(o => {
       const { ad_copy, ad_name, ad_pic_url, reference_id } = o;
       return {
         id: reference_id,
