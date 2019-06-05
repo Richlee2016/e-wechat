@@ -11,7 +11,7 @@ export default class User extends Service {
    */
   public async handleTag(
     method: 'create' | 'get' | 'update' | 'delete',
-    tag: { id?: number; name?: string; count?: number },
+    tag: { id?: number; name?: string; count?: number }
   ) {
     const { token, WxTagConfig } = await this._getTabToken();
     const opt: any = {
@@ -70,7 +70,7 @@ export default class User extends Service {
    */
   public async membersTag(
     method: 1 | 0,
-    userTag: { tagid: number; openid_list?: string[] },
+    userTag: { tagid: number; openid_list?: string[] }
   ) {
     const { token, WxTagConfig } = await this._getTabToken();
     let baseUrl = WxTagConfig.batchtTag(token);
@@ -99,7 +99,7 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxTagConfig.getidTag(token),
-        opt('POST', { openid }),
+        opt('POST', { openid })
       );
       return res.data;
     } catch (error) {
@@ -116,7 +116,7 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxUserConfig.fetchUserList(token, openid),
-        opt(),
+        opt()
       );
       return res.data;
     } catch (error) {
@@ -133,7 +133,7 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxUserConfig.createMark(token),
-        opt('POST', mark),
+        opt('POST', mark)
       );
       return res;
     } catch (error) {
@@ -150,7 +150,7 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxUserConfig.fetchUnionId(token, openid),
-        opt(),
+        opt()
       );
       return res.data;
     } catch (error) {
@@ -162,11 +162,11 @@ export default class User extends Service {
    * @param user_list
    */
   public async fetchUnionIds(
-    user_list: Array<{ openid: string; lang?: string }>,
+    user_list: Array<{ openid: string; lang?: string }>
   ) {
     // const { ctx } = this;
-    const { token, WxUserConfig, opt } = await this._getTabToken();
-    user_list.forEach((o) => (o.lang = 'zh_CN'));
+    const { token, WxUserConfig } = await this._getTabToken();
+    user_list.forEach(o => (o.lang = 'zh_CN'));
     try {
       const res = await Rxios({
         url: WxUserConfig.fetchUnionIds(token),
@@ -189,7 +189,7 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxUserConfig.fetchBlackList(token),
-        opt('POST', { begin_openid }),
+        opt('POST', { begin_openid })
       );
       return res.data;
     } catch (error) {
@@ -206,7 +206,7 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxUserConfig.createBlack(token),
-        opt('POST', { openid_list }),
+        opt('POST', { openid_list })
       );
       return res.data;
     } catch (error) {
@@ -223,7 +223,7 @@ export default class User extends Service {
     try {
       const res = await ctx.curl(
         WxUserConfig.deleteBlack(token),
-        opt('POST', { openid_list }),
+        opt('POST', { openid_list })
       );
       return res.data;
     } catch (error) {
@@ -248,7 +248,7 @@ export default class User extends Service {
     } = app.config;
     const optFun = (
       method?: 'GET' | 'POST',
-      data?: any,
+      data?: any
     ): { method: 'GET' | 'POST'; data?: any; dataType: string } => {
       const dataType = 'json';
       if (method === 'POST') {

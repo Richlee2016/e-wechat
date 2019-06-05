@@ -3,6 +3,7 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
+    "baseUrl": "./",
     "strict": true,
     "noImplicitAny": false,
     "experimentalDecorators": true,
@@ -23,8 +24,10 @@
     "importHelpers": true
   },
   "exclude": [
-    "app/public",
-    "app/views",
     "node_modules*"
+  ],
+  "include": [
+    "app",
+    "config"
   ]
 }

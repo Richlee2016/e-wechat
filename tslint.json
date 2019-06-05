@@ -1,48 +1,14 @@
 {
-  "extends": "tslint:latest",
+  "extends": [
+    "tslint-eslint-rules",
+    "tslint-plugin-prettier",
+    "tslint-config-prettier"
+  ],
   "rules": {
-    "quotemark": [
-      true,
-      "single",
-      "jsx-double"
-    ],
-    "no-console": [
-      true,
-      "dir",
-      "error",
-      "warn"
-    ],
-    "space-before-function-paren": false,
-    "interface-name": [
-      true,
-      "never-prefix"
-    ],
-    "adjacent-overload-signatures": true,
-    "member-access": [
-      false
-    ],
-    "member-ordering": [
-      true,
-      {
-        "order": "fields-first"
-      }
-    ],
-    "object-literal-sort-keys": false,
-    "max-classes-per-file": [
-      true,
-      10
-    ],
-    "variable-name": [
-      false,
-      "allow-leading-underscore"
-    ],
-    "align": [true, "statements"],
-    "switch-default": false,
-    "trailing-comma": false,
-    "max-line-length": false,
-    "no-var-requires": false,
-    "no-string-literal": false,
-    "only-arrow-functions": false
+    "prettier": true,
+    "no-console": false,
+    "no-unused-variable": true,
+    "no-unused-expression": [true, "allow-new", "allow-fast-null-checks"],
+    "no-trailing-whitespace": true
   }
 }
-

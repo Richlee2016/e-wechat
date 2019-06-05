@@ -21,7 +21,10 @@
     "ci": "npm run lint && npm run cov && npm run tsc",
     "autod": "autod",
     "lint": "tslint --project . -c tslint.json",
-    "clean": "ets clean"
+    "fix":  "tslint --project ./tsconfig.json --type-check --fix",
+    "clean": "ets clean",
+    "lint:ts": "tslint -p . --type-check",
+    "fix:ts": "tslint -p ./tsconfig.json --type-check --fix"
   },
   "dependencies": {
     "@types/glob": "^7.1.1",
@@ -55,12 +58,16 @@
     "@types/supertest": "^2.0.0",
     "autod": "^3.0.1",
     "autod-egg": "^1.1.0",
-    "egg-ci": "^1.8.0",
     "egg-bin": "^4.6.2",
+    "egg-ci": "^1.8.0",
     "egg-mock": "^3.16.0",
     "egg-ts-helper": "^1.11.0",
+    "prettier": "^1.17.1",
     "tslib": "^1.9.0",
     "tslint": "^4.0.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.0.0"
   },
   "engines": {
